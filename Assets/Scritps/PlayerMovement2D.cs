@@ -30,11 +30,9 @@ public class PlayerMovement2D : MonoBehaviour
     {
         // Comprobar si el jugador está en el suelo
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f);
-
-        // Detectar movimiento a la izquierda y derecha
         float moveDirection = Input.GetAxis("Horizontal");
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-        rb.velocity = new Vector2(moveDirection * speed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * speed, rb.linearVelocity.y);
 
         // Cambiar animaciones para correr y caminar
         if (moveDirection != 0)
@@ -61,7 +59,7 @@ public class PlayerMovement2D : MonoBehaviour
         // Saltar con flecha arriba
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             animator.SetTrigger("Jump");
             Debug.Log("El jugador ha saltado.");
         }
