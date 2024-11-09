@@ -50167,7 +50167,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 5.2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -50186,7 +50186,7 @@ CapsuleCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316101697}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 6200000, guid: e658471d13eab844d8afec71a3df6ecd, type: 2}
@@ -50223,10 +50223,10 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316101697}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: e658471d13eab844d8afec71a3df6ecd, type: 2}
+  m_Material: {fileID: 6200000, guid: e152e2ac9394244409cde8664d8fa757, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -50296,9 +50296,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb87be6949f6108428fc8e45e5b0a286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 20
-  jumpForce: 6.6
+  walkSpeed: 6
+  runSpeed: 12
+  jumpForce: 18
   crouchHeight: 0.5
   standingHeight: 1
 --- !u!1 &1342806463
