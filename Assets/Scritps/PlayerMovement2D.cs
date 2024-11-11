@@ -37,53 +37,65 @@ public class PlayerMovement2D : MonoBehaviour
         // Cambiar animaciones para correr y caminar
         if (moveDirection != 0)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isWalking", false);
-                Debug.Log("El jugador está corriendo.");
-            }
-            else
-            {
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isWalking", true);
-                Debug.Log("El jugador está caminando.");
-            }
+            animator.SetBool("run", Input.GetKey(KeyCode.LeftShift));
+            animator.SetBool("idle", false);
         }
         else
         {
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isWalking", false);
+            animator.SetBool("run", false);
+            animator.SetBool("idle", isGrounded);
         }
 
         // Saltar con flecha arriba
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            animator.SetTrigger("Jump");
+            animator.SetTrigger("jump"); // Usar Trigger en vez de Bool
             Debug.Log("El jugador ha saltado.");
         }
 
-        // Agacharse con flecha abajo
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        // Detectar caída
+        if (!isGrounded && rb.linearVelocity.y < 0)
+        {
+            animator.SetBool("fall", true);
+        }
+
+        // Aterrizaje
+        if (isGrounded && animator.GetBool("fall"))
+        {
+            animator.SetBool("fall", false);
+            Debug.Log("El jugador ha aterrizado.");
+        }
+
+        // Agacharse
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             isCrouching = true;
             boxCollider.size = new Vector2(boxCollider.size.x, crouchHeight);
-            animator.SetBool("isCrouching", true);
-            Debug.Log("El jugador se ha agachado.");
+            animator.SetBool("crouch", true);
         }
-        else if (Input.GetKeyUp(KeyCode.DownArrow))
+        else
         {
             isCrouching = false;
             boxCollider.size = new Vector2(boxCollider.size.x, standingHeight);
-            animator.SetBool("isCrouching", false);
-            Debug.Log("El jugador ha dejado de agacharse.");
+            animator.SetBool("crouch", false);
         }
 
-        // Voltear al personaje hacia la dirección de movimiento
+        // Trepar
+        if (Input.GetKey(KeyCode.C))
+        {
+            animator.SetBool("climb", true);
+        }
+        else
+        {
+            animator.SetBool("climb", false);
+        }
+
+        // Voltear personaje
         if (moveDirection != 0)
         {
             transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
         }
     }
+
 }
