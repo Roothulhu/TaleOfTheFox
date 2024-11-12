@@ -54,13 +54,13 @@ public class PlayerMovement2D : MonoBehaviour
         {
             animator.SetBool("isRunning", false);
             animator.SetBool("isWalking", false);
+            animator.SetBool("isIdle", true);
         }
 
         // Saltar con flecha arriba
         if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            animator.SetTrigger("Jump");
             Debug.Log("El jugador ha saltado.");
         }
 
@@ -85,5 +85,20 @@ public class PlayerMovement2D : MonoBehaviour
         {
             transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
         }
+        /*
+
+        if(rb.linearVelocity.y > 1)
+        {
+            animator.SetBool("isJumping", true);
+        }
+        else if(rb.linearVelocity.y < -1)
+        {
+            animator.SetBool("isFalling", true);
+        }
+        else
+        {
+            animator.SetBool("isIdle", true);
+        }
+        */
     }
 }
