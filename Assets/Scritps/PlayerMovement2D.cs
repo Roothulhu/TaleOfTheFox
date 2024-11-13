@@ -33,33 +33,34 @@ public class PlayerMovement2D : MonoBehaviour
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
         rb.linearVelocity = new Vector2(moveDirection * speed, rb.linearVelocity.y);
 
+        //Debug.Log("El movimieento en x es: " + rb.linearVelocity.x);
         // Cambiar animaciones para correr y caminar
-        if (moveDirection != 0)
-        {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isWalking", false);
-                Debug.Log("El jugador está corriendo.");
-            }
-            else
-            {
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isWalking", true);
-                Debug.Log("El jugador está caminando.");
-            }
-        }
-        else
+        if(rb.linearVelocity.x == 0)
         {
             animator.SetBool("isIdle", true);
         }
+        else
+        {
+            transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                animator.SetBool("isRunning", true);
+                //Debug.Log("El jugador está corriendo.");
+            }
+            else
+            {
+                animator.SetBool("isWalking", true);
+                //Debug.Log("El jugador está caminando.");
+            }
+        }
+        
 
         // Saltar con flecha arriba
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.UpArrow )) 
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            animator.SetTrigger("Jump");
-            Debug.Log("El jugador ha saltado.");
+            animator.SetBool("isJumping", true); //Mientras no est tocando el suelo y su velovidad en Y sea mayor que 0
+            //Debug.Log("El jugador ha saltado.");
         }
 
         // Agacharse con flecha abajo
@@ -68,20 +69,13 @@ public class PlayerMovement2D : MonoBehaviour
             isCrouching = true;
             boxCollider.size = new Vector2(boxCollider.size.x, crouchHeight);
             animator.SetBool("isCrouching", true);
-            Debug.Log("El jugador se ha agachado.");
+            //Debug.Log("El jugador se ha agachado.");
         }
-        else if (Input.GetKeyUp(KeyCode.DownArrow))
+        if (Input.GetKeyUp(KeyCode.DownArrow))
         {
             isCrouching = false;
             boxCollider.size = new Vector2(boxCollider.size.x, standingHeight);
-            animator.SetBool("isCrouching", false);
-            Debug.Log("El jugador ha dejado de agacharse.");
-        }
-
-        // Voltear al personaje hacia la dirección de movimiento
-        if (moveDirection != 0)
-        {
-            transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
+            //Debug.Log("El jugador ha dejado de agacharse.");
         }
     }
 }
