@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -17,7 +15,8 @@ public class PlayerMovement2D : MonoBehaviour
     private Animator animator;
     private BoxCollider2D boxCollider;
     private bool isGrounded;
-    private bool isCrouching = false;
+    private bool isCrouching;
+
 
     void Start()
     {
@@ -52,8 +51,7 @@ public class PlayerMovement2D : MonoBehaviour
         }
         else
         {
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isWalking", false);
+            animator.SetBool("isIdle", true);
         }
 
         // Saltar con flecha arriba
