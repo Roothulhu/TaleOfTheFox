@@ -1,104 +1,165 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(AudioSource))] // Añadimos un AudioSource al objeto
 public class PlayerMovement2D : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float jumpForce = 5f;
-    public float crouchHeight = 0.5f;
-    public float standingHeight = 1f;
+    public float climbSpeed = 3f;
+    public AudioClip jumpSound; // Clip de sonido para el salto
+
+    private bool canJump = true;
+    private bool isFalling = false;
 
     private Rigidbody2D rb;
     private Animator animator;
     private BoxCollider2D boxCollider;
+    private AudioSource audioSource;
+
     private bool isGrounded;
-    private bool isCrouching = false;
+    private string currentAnimationState;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
+
+        Debug.Log("PlayerMovement2D initialized.");
     }
 
     void Update()
     {
-        // Comprobar si el jugador está en el suelo
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f);
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f, LayerMask.GetMask("Ground"));
+
+        if (isGrounded)
+        {
+            canJump = true; // Habilitar salto al tocar el suelo
+        }
+
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            HandleMovement();
+        }
+        else if (isGrounded && rb.velocity.x == 0)
+        {
+            ChangeAnimationState("isIdle");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+        {
+            HandleJump();
+        }
+
+        if (Input.GetKey(KeyCode.C))
+        {
+            HandleClimbing();
+        }
+
+        if (!isGrounded && rb.velocity.y < 0)
+        {
+            HandleFalling();
+        }
+    }
+
+    void HandleMovement()
+    {
         float moveDirection = Input.GetAxis("Horizontal");
         float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-        rb.linearVelocity = new Vector2(moveDirection * speed, rb.linearVelocity.y);
+        rb.velocity = new Vector2(moveDirection * speed, rb.velocity.y);
 
-        // Cambiar animaciones para correr y caminar
-        if (moveDirection != 0)
+        if (isGrounded)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                animator.SetBool("isRunning", true);
-                animator.SetBool("isWalking", false);
-                Debug.Log("El jugador está corriendo.");
-            }
-            else
-            {
-                animator.SetBool("isRunning", false);
-                animator.SetBool("isWalking", true);
-                Debug.Log("El jugador está caminando.");
-            }
-        }
-        else
-        {
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isWalking", false);
-            animator.SetBool("isIdle", true);
+            ChangeAnimationState(Input.GetKey(KeyCode.LeftShift) ? "isRunning" : "isWalking");
         }
 
-        // Saltar con flecha arriba
-        if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            Debug.Log("El jugador ha saltado.");
-        }
-
-        // Agacharse con flecha abajo
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            isCrouching = true;
-            boxCollider.size = new Vector2(boxCollider.size.x, crouchHeight);
-            animator.SetBool("isCrouching", true);
-            Debug.Log("El jugador se ha agachado.");
-        }
-        else if (Input.GetKeyUp(KeyCode.DownArrow))
-        {
-            isCrouching = false;
-            boxCollider.size = new Vector2(boxCollider.size.x, standingHeight);
-            animator.SetBool("isCrouching", false);
-            Debug.Log("El jugador ha dejado de agacharse.");
-        }
-
-        // Voltear al personaje hacia la dirección de movimiento
         if (moveDirection != 0)
         {
             transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
+            Debug.Log($"FlipCharacter called. Direction: {Mathf.Sign(moveDirection)}");
         }
-        /*
+    }
 
-        if(rb.linearVelocity.y > 1)
+    void HandleJump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        ChangeAnimationState("isJumping");
+        canJump = false;  // Deshabilitar salto inmediatamente después de saltar
+        audioSource.PlayOneShot(jumpSound); // Reproduce el sonido de salto
+        Debug.Log("HandleJump called: Jump triggered.");
+    }
+
+    void HandleClimbing()
+    {
+        if (IsTouchingClimbable())
         {
-            animator.SetBool("isJumping", true);
+            rb.velocity = new Vector2(rb.velocity.x, climbSpeed);
+            ChangeAnimationState("isClimbing");
+            Debug.Log("HandleClimbing called: Climbing triggered.");
         }
-        else if(rb.linearVelocity.y < -1)
+    }
+
+    void HandleFalling()
+    {
+        ChangeAnimationState("isFalling");
+        Debug.Log("HandleFalling called: Falling triggered.");
+    }
+
+    bool IsTouchingClimbable()
+    {
+        bool touchingClimbable = Physics2D.Raycast(transform.position, Vector2.up, boxCollider.bounds.extents.y + 0.1f, LayerMask.GetMask("Climbable"));
+        Debug.Log($"IsTouchingClimbable: {touchingClimbable}");
+        return touchingClimbable;
+    }
+
+    void ChangeAnimationState(string newState)
+    {
+        if (currentAnimationState == newState) return;
+
+        animator.ResetTrigger("isIdle");
+        animator.ResetTrigger("isWalking");
+        animator.ResetTrigger("isRunning");
+        animator.ResetTrigger("isJumping");
+        animator.ResetTrigger("isFalling");
+        animator.ResetTrigger("isClimbing");
+
+        animator.SetTrigger(newState);
+        currentAnimationState = newState;
+
+        Debug.Log($"ChangeAnimationState: {newState} triggered.");
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            animator.SetBool("isFalling", true);
+            canJump = true;  // Permitir salto inmediatamente al aterrizar
+            ChangeAnimationState("isIdle");
+            Debug.Log("OnCollisionEnter2D: Landed on ground, canJump set to true.");
         }
-        else
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            animator.SetBool("isIdle", true);
+            canJump = true;  // Mantener canJump habilitado mientras está en el suelo
+            ChangeAnimationState("isIdle");
+            Debug.Log("OnCollisionStay2D: Staying on ground, canJump set to true.");
         }
-        */
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            canJump = false;  // Deshabilitar salto al salir del suelo
+            Debug.Log("OnCollisionExit2D: Left ground, canJump set to false.");
+        }
     }
 }
