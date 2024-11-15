@@ -3,24 +3,25 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(AudioSource))] // Añadimos un AudioSource al objeto
+[RequireComponent(typeof(AudioSource))]
 public class PlayerMovement2D : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float jumpForce = 5f;
     public float climbSpeed = 3f;
-    public AudioClip jumpSound; // Clip de sonido para el salto
+    public AudioClip jumpSound;
 
     private bool canJump = true;
     private bool isFalling = false;
-
+    
     private Rigidbody2D rb;
     private Animator animator;
     private BoxCollider2D boxCollider;
     private AudioSource audioSource;
 
-    private bool isGrounded;
+    private bool isGrounded; //Detectar suelo
+    private int groundLayerMask; //Identificador de capa ecenario
     private string currentAnimationState;
 
     void Start()
@@ -29,33 +30,55 @@ public class PlayerMovement2D : MonoBehaviour
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
         audioSource = GetComponent<AudioSource>();
-
-        Debug.Log("PlayerMovement2D initialized.");
+        
+        groundLayerMask = LayerMask.GetMask("Ground");
+        Debug.Log($"Ground Layer Mask Value: {groundLayerMask}");
     }
 
     void Update()
     {
-        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f, LayerMask.GetMask("Ground"));
-
-        if (isGrounded)
+        isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f, groundLayerMask);
+        
+        float moveDirection = Input.GetAxis("Horizontal");
+        rb.velocity = new Vector2(moveDirection * (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed), rb.velocity.y);
+        
+        if (moveDirection != 0)
         {
-            canJump = true; // Habilitar salto al tocar el suelo
+            transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
+            Debug.Log($"FlipCharacter called. Direction: {Mathf.Sign(moveDirection)}");
+        }
+
+        if (Input.GetAxis("Horizontal") != 0 && Input.GetKey(KeyCode.LeftShift))
+        {
+            ChangeAnimationState("isRunning");
         }
 
         if (Input.GetAxis("Horizontal") != 0)
         {
-            HandleMovement();
+            ChangeAnimationState("isWalking");
         }
-        else if (isGrounded && rb.velocity.x == 0)
+
+        if (rb.velocity.x == 0)
         {
             ChangeAnimationState("isIdle");
         }
-
+        else if (!isGrounded && rb.velocity.y > 0)
+        {
+            ChangeAnimationState("isJumping");
+        }
+        
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
-            HandleJump();
+            if (currentAnimationState == "isRunning" || currentAnimationState == "isWalking")
+            {
+                HandleJump();
+            }
+            else
+            {
+                HandleJump();
+            }
         }
-
+        
         if (Input.GetKey(KeyCode.C))
         {
             HandleClimbing();
@@ -64,41 +87,24 @@ public class PlayerMovement2D : MonoBehaviour
         if (!isGrounded && rb.velocity.y < 0)
         {
             HandleFalling();
-        }
-    }
-
-    void HandleMovement()
-    {
-        float moveDirection = Input.GetAxis("Horizontal");
-        float speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-        rb.velocity = new Vector2(moveDirection * speed, rb.velocity.y);
-
-        if (isGrounded)
-        {
-            ChangeAnimationState(Input.GetKey(KeyCode.LeftShift) ? "isRunning" : "isWalking");
-        }
-
-        if (moveDirection != 0)
-        {
-            transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
-            Debug.Log($"FlipCharacter called. Direction: {Mathf.Sign(moveDirection)}");
+            canJump = true; // Habilitar salto al tocar el suelo
         }
     }
 
     void HandleJump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         ChangeAnimationState("isJumping");
-        canJump = false;  // Deshabilitar salto inmediatamente después de saltar
-        audioSource.PlayOneShot(jumpSound); // Reproduce el sonido de salto
+        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        canJump = false;
+        audioSource.PlayOneShot(jumpSound);
         Debug.Log("HandleJump called: Jump triggered.");
     }
 
     void HandleClimbing()
     {
-        if (IsTouchingClimbable())
+        if (Input.GetKey(KeyCode.C) && gameObject.CompareTag("Climbable"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, climbSpeed);
+            rb.velocity = new Vector2(rb.velocity.x, climbSpeed); // Escalar hacia arriba
             ChangeAnimationState("isClimbing");
             Debug.Log("HandleClimbing called: Climbing triggered.");
         }
@@ -119,19 +125,16 @@ public class PlayerMovement2D : MonoBehaviour
 
     void ChangeAnimationState(string newState)
     {
-        if (currentAnimationState == newState) return;
-
         animator.ResetTrigger("isIdle");
         animator.ResetTrigger("isWalking");
         animator.ResetTrigger("isRunning");
         animator.ResetTrigger("isJumping");
         animator.ResetTrigger("isFalling");
         animator.ResetTrigger("isClimbing");
-
         animator.SetTrigger(newState);
         currentAnimationState = newState;
-
         Debug.Log($"ChangeAnimationState: {newState} triggered.");
+        if (currentAnimationState == newState) return;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
