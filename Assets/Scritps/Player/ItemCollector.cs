@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI; // Necesario para trabajar con UI
 
+
+
 public class ItemCollector : MonoBehaviour
 {
+    [SerializeField] private Score Score;
     public Image cherryImage;
     public Image gemImage;
     public Image potionImage;
@@ -24,7 +27,7 @@ public class ItemCollector : MonoBehaviour
 
     public void OnCherryCollected()
     {
-        currentCherries++;
+        Score.IncreaseCherry();
         Debug.Log($"Cherries collected: {currentCherries}/{requiredCherries}");
 
         if (currentCherries >= requiredCherries)
@@ -35,7 +38,7 @@ public class ItemCollector : MonoBehaviour
 
     public void OnGemCollected()
     {
-        currentGems++;
+        Score.IncreaseDiamond();
         Debug.Log($"Gems collected: {currentGems}/{requiredGems}");
 
         if (currentGems >= requiredGems)
@@ -46,7 +49,8 @@ public class ItemCollector : MonoBehaviour
 
     public void OnPotionCollected()
     {
-        currentPotions++;
+        Score.IncreasePotion();
+        
         Debug.Log($"Potions collected: {currentPotions}/{requiredPotions}");
 
         if (currentPotions >= requiredPotions)
