@@ -40,7 +40,7 @@ public class PlayerMovement2D : MonoBehaviour
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f, groundLayerMask);
         
         float moveDirection = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveDirection * (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed), rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed), rb.linearVelocity.y);
         
         if (moveDirection != 0)
         {
@@ -58,11 +58,11 @@ public class PlayerMovement2D : MonoBehaviour
             ChangeAnimationState("isWalking");
         }
 
-        if (rb.velocity.x == 0)
+        if (rb.linearVelocity.x == 0)
         {
             ChangeAnimationState("isIdle");
         }
-        else if (!isGrounded && rb.velocity.y > 0)
+        else if (!isGrounded && rb.linearVelocity.y > 0)
         {
             ChangeAnimationState("isJumping");
         }
@@ -84,7 +84,7 @@ public class PlayerMovement2D : MonoBehaviour
             HandleClimbing();
         }
 
-        if (!isGrounded && rb.velocity.y < 0)
+        if (!isGrounded && rb.linearVelocity.y < 0)
         {
             HandleFalling();
             canJump = true; // Habilitar salto al tocar el suelo
@@ -94,7 +94,7 @@ public class PlayerMovement2D : MonoBehaviour
     void HandleJump()
     {
         ChangeAnimationState("isJumping");
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         canJump = false;
         audioSource.PlayOneShot(jumpSound);
         Debug.Log("HandleJump called: Jump triggered.");
@@ -104,7 +104,7 @@ public class PlayerMovement2D : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.C) && gameObject.CompareTag("Climbable"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, climbSpeed); // Escalar hacia arriba
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, climbSpeed); // Escalar hacia arriba
             ChangeAnimationState("isClimbing");
             Debug.Log("HandleClimbing called: Climbing triggered.");
         }
