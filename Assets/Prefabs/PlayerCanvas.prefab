@@ -339,10 +339,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: '- Recupera la pocion magica de tu contratista.
 
-    - Obten x diamantes
+    - Obten 5 diamantes
 
     -
-    Obten x cerezas'
+    Obten 5 cerezas'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9a0b97590170214f876daca499f89e2, type: 2}
   m_sharedMaterial: {fileID: 8905127925170115091, guid: a9a0b97590170214f876daca499f89e2, type: 2}
@@ -1860,7 +1860,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a323077089ea94418fa97c47e209750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cherry: 0
+  diamond: 0
+  potion: 0
+  lives: 0
   cherryTMP: {fileID: 96688172550343969}
   diamondTMP: {fileID: 3391040602266243102}
   potionTMP: {fileID: 6685618795947968104}
   livesTMP: {fileID: 2122476326094165439}
+  Finish: {fileID: 0}
