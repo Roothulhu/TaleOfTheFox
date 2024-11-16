@@ -64,10 +64,15 @@ public class PlayerMovement2D : MonoBehaviour
         {
             HandleJump();
         }
-
+        
         if (Input.GetKey(KeyCode.C))
         {
-            HandleClimbing();
+            animator.SetBool("climb", true);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, climbSpeed); // Escalar hacia arriba
+        }
+        else
+        {
+            animator.SetBool("climb", false);
         }
 
         if (!isGrounded && rb.linearVelocity.y < 0)
@@ -83,16 +88,6 @@ public class PlayerMovement2D : MonoBehaviour
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         audioSource.PlayOneShot(jumpSound);
         Debug.Log("HandleJump called: Jump triggered.");
-    }
-
-    void HandleClimbing()
-    {
-        if (Input.GetKey(KeyCode.C) && gameObject.CompareTag("Climbable"))
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, climbSpeed); // Escalar hacia arriba
-            ChangeAnimationState("isClimbing");
-            Debug.Log("HandleClimbing called: Climbing triggered.");
-        }
     }
 
     void HandleFalling()
