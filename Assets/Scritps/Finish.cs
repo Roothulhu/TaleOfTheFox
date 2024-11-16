@@ -14,6 +14,9 @@ public class Finish : MonoBehaviour
     [SerializeField] private TextMeshProUGUI diamondTMP;
     [SerializeField] private TextMeshProUGUI potionTMP;
     [SerializeField] private TextMeshProUGUI livesTMP;
+
+    [SerializeField] private GameObject playerCanvas;
+    [SerializeField] private GameObject pauseCanvas;
     
     public void SetFinalScore()
     {
@@ -36,11 +39,19 @@ public class Finish : MonoBehaviour
             winGO.SetActive(false);
         }
 
+        playerCanvas.SetActive(false);
+        pauseCanvas.SetActive(false);
+        
         darkBackground.SetActive(true);
     }
     
     public void ChangeScene(int scene)
     {
         SceneManager.LoadScene(scene);
+    }
+
+    public void RestartGame()
+    {
+        Scene scene = SceneManager.GetActiveScene(); SceneManager.LoadScene(scene.name);
     }
 }

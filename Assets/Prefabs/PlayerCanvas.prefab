@@ -337,7 +337,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '- Recupera la pocion magica de tu contratista.
+  m_text: '- Recupera la pocion magica de tu contratista
 
     - Obten 5 diamantes
 
