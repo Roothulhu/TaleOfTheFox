@@ -67,12 +67,12 @@ public class PlayerMovement2D : MonoBehaviour
         
         if (Input.GetKey(KeyCode.C))
         {
-            animator.SetBool("climb", true);
+            animator.SetBool("isClimbing", true);
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, climbSpeed); // Escalar hacia arriba
         }
         else
         {
-            animator.SetBool("climb", false);
+            animator.SetBool("isClimbing", false);
         }
 
         if (!isGrounded && rb.linearVelocity.y < 0)
