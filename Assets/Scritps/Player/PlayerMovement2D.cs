@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -13,8 +14,8 @@ public class PlayerMovement2D : MonoBehaviour
     public AudioClip jumpSound;
 
     private bool canJump = true;
-    private bool isFalling = false;
-    
+    private float lastYPosition;
+
     private Rigidbody2D rb;
     private Animator animator;
     private BoxCollider2D boxCollider;
@@ -24,61 +25,46 @@ public class PlayerMovement2D : MonoBehaviour
     private int groundLayerMask; //Identificador de capa ecenario
     private string currentAnimationState;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
         audioSource = GetComponent<AudioSource>();
-        
         groundLayerMask = LayerMask.GetMask("Ground");
-        Debug.Log($"Ground Layer Mask Value: {groundLayerMask}");
+        lastYPosition = transform.position.y;
+        currentAnimationState = String.Empty;
+        isGrounded = false;
     }
 
     void Update()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, boxCollider.bounds.extents.y + 0.1f, groundLayerMask);
-        
         float moveDirection = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(moveDirection * (Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed), rb.linearVelocity.y);
-        
+
         if (moveDirection != 0)
         {
             transform.localScale = new Vector3(Mathf.Sign(moveDirection), 1, 1);
             Debug.Log($"FlipCharacter called. Direction: {Mathf.Sign(moveDirection)}");
         }
-
         if (Input.GetAxis("Horizontal") != 0 && Input.GetKey(KeyCode.LeftShift))
         {
             ChangeAnimationState("isRunning");
         }
 
-        if (Input.GetAxis("Horizontal") != 0)
+        if (rb.linearVelocity.y < 0.0001f && Input.GetAxis("Horizontal") != 0)
         {
             ChangeAnimationState("isWalking");
         }
-
-        if (rb.linearVelocity.x == 0)
-        {
-            ChangeAnimationState("isIdle");
-        }
-        else if (!isGrounded && rb.linearVelocity.y > 0)
-        {
-            ChangeAnimationState("isJumping");
-        }
         
+
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
-            if (currentAnimationState == "isRunning" || currentAnimationState == "isWalking")
-            {
-                HandleJump();
-            }
-            else
-            {
-                HandleJump();
-            }
+            HandleJump();
         }
-        
+
         if (Input.GetKey(KeyCode.C))
         {
             HandleClimbing();
@@ -87,15 +73,14 @@ public class PlayerMovement2D : MonoBehaviour
         if (!isGrounded && rb.linearVelocity.y < 0)
         {
             HandleFalling();
-            canJump = true; // Habilitar salto al tocar el suelo
         }
     }
 
     void HandleJump()
     {
+        canJump = false;
         ChangeAnimationState("isJumping");
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        canJump = false;
         audioSource.PlayOneShot(jumpSound);
         Debug.Log("HandleJump called: Jump triggered.");
     }
@@ -116,13 +101,6 @@ public class PlayerMovement2D : MonoBehaviour
         Debug.Log("HandleFalling called: Falling triggered.");
     }
 
-    bool IsTouchingClimbable()
-    {
-        bool touchingClimbable = Physics2D.Raycast(transform.position, Vector2.up, boxCollider.bounds.extents.y + 0.1f, LayerMask.GetMask("Climbable"));
-        Debug.Log($"IsTouchingClimbable: {touchingClimbable}");
-        return touchingClimbable;
-    }
-
     void ChangeAnimationState(string newState)
     {
         animator.ResetTrigger("isIdle");
@@ -134,7 +112,6 @@ public class PlayerMovement2D : MonoBehaviour
         animator.SetTrigger(newState);
         currentAnimationState = newState;
         Debug.Log($"ChangeAnimationState: {newState} triggered.");
-        if (currentAnimationState == newState) return;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -151,7 +128,7 @@ public class PlayerMovement2D : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            canJump = true;  // Mantener canJump habilitado mientras está en el suelo
+            canJump = true;  // Mantener canJump habilitado mientras estÃ¡ en el suelo
             ChangeAnimationState("isIdle");
             Debug.Log("OnCollisionStay2D: Staying on ground, canJump set to true.");
         }
@@ -162,6 +139,7 @@ public class PlayerMovement2D : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             canJump = false;  // Deshabilitar salto al salir del suelo
+            HandleFalling();
             Debug.Log("OnCollisionExit2D: Left ground, canJump set to false.");
         }
     }
