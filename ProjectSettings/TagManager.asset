@@ -8,6 +8,8 @@ TagManager:
   - Gem
   - Cherry
   - Potion
+  - Smiler
+  - box
   layers:
   - Default
   - TransparentFX
