@@ -264,6 +264,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 176511169116304646, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 176511169116304646, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 176511169116304646, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 176511169116304646, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 358557814377641518, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -344,9 +360,61 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1650174347554163100, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1650174347554163100, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1650174347554163100, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 1650174347554163100, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316893456749994847, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316893456749994847, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316893456749994847, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5316893456749994847, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909984966487667824, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909984966487667824, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909984966487667824, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1680
+      objectReference: {fileID: 0}
+    - target: {fileID: 5909984966487667824, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 9013601040501238809, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
       propertyPath: m_Name
       value: PlayerCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 9013601040501238809, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9062970084963472067, guid: 4a5ac9386bd7242409a8a4e38727eef4, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
@@ -856,14 +924,12 @@ VideoPlayer:
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources:
-  - {fileID: 0}
-  m_DirectAudioVolumes:
-  - 1
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
   m_Url: 
-  m_EnabledAudioTracks: 01
-  m_DirectAudioMutes: 00
-  m_ControlledAudioTrackCount: 1
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
@@ -1197,7 +1263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3213679442315433188, guid: ad98927b8e11447b693e860b442fedc7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2381986302479389511, guid: ad98927b8e11447b693e860b442fedc7, type: 3}
