@@ -58,7 +58,7 @@ public class PlayerMovement2D : MonoBehaviour
         {
             ChangeAnimationState("isWalking");
         }
-        
+
 
         if (Input.GetKeyDown(KeyCode.Space) && canJump)
         {
