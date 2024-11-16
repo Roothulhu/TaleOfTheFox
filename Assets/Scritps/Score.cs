@@ -3,15 +3,17 @@ using UnityEngine;
 
 public class Score : MonoBehaviour
 {
-    private int cherry;
-    private int diamond;
-    private int potion;
-    private int lives;
+    public int cherry;
+    public int diamond;
+    public int potion;
+    public int lives;
     
     [SerializeField] private TextMeshProUGUI cherryTMP;
     [SerializeField] private TextMeshProUGUI diamondTMP;
     [SerializeField] private TextMeshProUGUI potionTMP;
     [SerializeField] private TextMeshProUGUI livesTMP;
+
+    [SerializeField] private Finish Finish;
 
     private void Start()
     {
@@ -38,6 +40,10 @@ public class Score : MonoBehaviour
     {
         lives--;
         livesTMP.text = lives.ToString();
+        if (lives == 0)
+        {
+            Finish.SetFinalScore();
+        }
 
         return lives;
     }

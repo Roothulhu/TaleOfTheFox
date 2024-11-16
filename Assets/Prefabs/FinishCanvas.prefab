@@ -375,7 +375,7 @@ GameObject:
   - component: {fileID: 3851012206765475024}
   - component: {fileID: 1564936058100622271}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Cherry (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -873,7 +873,7 @@ GameObject:
   - component: {fileID: 169501302803017121}
   - component: {fileID: 2109241608710677683}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Potion (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1364,7 +1364,7 @@ GameObject:
   - component: {fileID: 3513123753115988760}
   - component: {fileID: 9122031834332048010}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Lives (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2069,6 +2069,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba24e24b42c50c341a4400fd42cf3953, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Score: {fileID: 0}
+  darkBackground: {fileID: 7649791969978572351}
+  winGO: {fileID: 3390034221292343631}
+  loseGO: {fileID: 2463782334203096045}
+  cherryTMP: {fileID: 1564936058100622271}
+  diamondTMP: {fileID: 3096291503598590024}
+  potionTMP: {fileID: 2109241608710677683}
+  livesTMP: {fileID: 9122031834332048010}
 --- !u!1 &7763099398492624054
 GameObject:
   m_ObjectHideFlags: 0
@@ -2081,7 +2089,7 @@ GameObject:
   - component: {fileID: 4981752600146413486}
   - component: {fileID: 3096291503598590024}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Diamond (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
