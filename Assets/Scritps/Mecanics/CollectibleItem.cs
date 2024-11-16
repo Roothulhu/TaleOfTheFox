@@ -2,33 +2,48 @@ using UnityEngine;
 
 public class CollectibleItem : MonoBehaviour
 {
-    public string itemType; // Tipo de objeto: "Cherry", "Gem", "Potion"
+    [SerializeField] private Score Score;
+
+    // Enum para definir los tipos de objetos recolectables
+    public enum ItemType
+    {
+        Cherry,
+        Gem,
+        Potion
+    }
+
+    [SerializeField] private ItemType itemType; // Define el tipo de objeto usando el enum
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("Validando case de fruta");
         if (collision.CompareTag("Player"))
         {
-            Debug.Log($"Collected: {itemType}");
-            ItemCollector itemCollector = collision.GetComponent<ItemCollector>();
-
-            if (itemCollector != null)
+            Debug.Log("Colisión con el jugador detectada");
+            
+            switch (itemType)
             {
-                switch (itemType)
-                {
-                    case "Cherry":
-                        itemCollector.OnCherryCollected();
-                        break;
+                case ItemType.Cherry:
+                    Debug.Log("Collected: Cherry");
+                    Score.IncreaseCherry();
+                    Destroy(gameObject);
+                    break;
 
-                    case "Gem":
-                        itemCollector.OnGemCollected();
-                        break;
+                case ItemType.Gem:
+                    Debug.Log("Collected: Gem");
+                    Score.IncreaseDiamond();
+                    Destroy(gameObject);
+                    break;
 
-                    case "Potion":
-                        itemCollector.OnPotionCollected();
-                        break;
-                }
+                case ItemType.Potion:
+                    Debug.Log("Collected: Potion");
+                    Score.IncreasePotion();
+                    Destroy(gameObject);
+                    break;
 
-                Destroy(gameObject); // Destruir el objeto recolectado
+                default:
+                    Debug.LogWarning("ItemType no reconocido");
+                    break;
             }
         }
     }
